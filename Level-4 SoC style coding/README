@@ -1,1 +1,30 @@
-hello
+
+real SoC teams handle modular verification codebases :
+  Let’s split the Level-4 manager/slave/interconnect system into clean, well-structured files, each with a clear role — just like you’d do in a professional environment.
+  We’ll also bring in a package.vc (Verilog compile list) concept to show how simulation inclusion works.
+
+✅ Benefits of This Split :
+
+| Concept                  | Benefit                                                           |
+| ------------------------ | ----------------------------------------------------------------- |
+| `package.vc`             | Central file management, easy for version control and team builds |
+| `pkg/`                   | Common parameters, typedefs shared across IPs                     |
+| `bus_if.sv`              | Single interface definition to ensure consistency                 |
+| `src/` split             | Independent module compilation and reuse                          |
+| `monitor` & `scoreboard` | Enables step-by-step verification visibility                      |
+
+🧩 Overall Structure :
+
+bus_system/
+├── pkg/
+│   ├── bus_pkg.sv          # typedefs, parameters, enums
+│   ├── bus_if.sv           # interface (shared)
+├── src/
+│   ├── manager.sv          # initiator
+│   ├── slave.sv            # target
+│   ├── interconnect.sv     # simple fabric
+│   ├── monitor.sv          # transaction monitor
+│   ├── scoreboard.sv       # basic data checker
+│   ├── top_tb.sv           # testbench top
+├── sim/
+│   ├── package.vc          # file inclusion list

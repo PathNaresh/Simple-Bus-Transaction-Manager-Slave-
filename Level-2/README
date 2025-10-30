@@ -9,3 +9,14 @@ Let’s now enhance the simple manager–slave example with more realistic behav
   Burst transactions (multiple data beats per command)
   Response signal (resp) for OK/ERROR
   Clear separation of combinational vs sequential logic
+
+🧠 What from This Version : 
+
+| Feature                     | Why It Matters                                   |
+| --------------------------- | ------------------------------------------------ |
+| **Handshake (valid+ready)** | Models real bus behavior like AXI, AHB, Wishbone |
+| **Burst transfers**         | Adds multi-beat transaction realism              |
+| **Latency/random delay**    | Emulates variable memory access times            |
+| **Response field**          | Mimics error signaling (OKAY/SLVERR)             |
+| **Structured interface**    | Makes it scalable to multiple agents             |
+

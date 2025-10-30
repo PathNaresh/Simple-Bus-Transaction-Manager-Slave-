@@ -1,16 +1,31 @@
 
 Level-4 SystemVerilog upgrade that :
-
-Splits read and write channels (separate handshakes)
-Adds transaction IDs (to track outstanding requests)
-Adds monitors + scoreboard (class-based) to automatically check that reads return the values written earlier
-Keeps the interconnect + multiple slaves from Level-3 with address decode and routing
-Uses interface + virtual interface for clean connectivity
+  Splits read and write channels (separate handshakes)
+  Adds transaction IDs (to track outstanding requests)
+  Adds monitors + scoreboard (class-based) to automatically check that reads return the values written earlier
+  Keeps the interconnect + multiple slaves from Level-3 with address decode and routing
+  Uses interface + virtual interface for clean connectivity
 
 Key design choices / notes :
+  Uses SystemVerilog (interfaces, typedef struct, classes, mailbox).
+  Manager issues writes/reads with an id (4-bit here). Manager allows multiple outstanding transactions.
+  Monitors put transaction records into mailboxes for the scoreboard.
+  Scoreboard keeps a golden memory and checks read responses against previous writes.
+  Two slaves (address ranges 0x00..0x3F and 0x40..0x7F) with random latency and independent read/write behavior.
 
-Uses SystemVerilog (interfaces, typedef struct, classes, mailbox).
-Manager issues writes/reads with an id (4-bit here). Manager allows multiple outstanding transactions.
-Monitors put transaction records into mailboxes for the scoreboard.
-Scoreboard keeps a golden memory and checks read responses against previous writes.
-Two slaves (address ranges 0x00..0x3F and 0x40..0x7F) with random latency and independent read/write behavior.
+How to run :
+  Save the above into level4_top.sv.
+  Compile & run with any SystemVerilog simulator (VCS, Questa, Xcelium, Icarus-SV if it supports SV classes/mailbox).
+  Example (Questa): vlog level4_top.sv && vsim -c -do "run -all; quit" top_tb
+  Watch the console: monitors will print transactions and scoreboard will print PASS/ERROR lines.
+
+Discussion — what this teaches :
+  Splitting read/write channels models AXI/AHB-style decoupled channels and simplifies timing reasoning.
+  Using id allows multiple outstanding transactions; scoreboard + monitors track them without the DUT needing to reorder replies predictably.
+  Mailbox + class monitors is a small-scale version of how a UVM agent/scoreboard flow works (but without UVM overhead).
+
+What can be extended further on this :
+  add reordering (interconnect that returns responses out-of-order),
+  add burst support (multiple beats per id),
+  add error responses (resp non-OK) and test error handling,
+  add a functional coverage collector.

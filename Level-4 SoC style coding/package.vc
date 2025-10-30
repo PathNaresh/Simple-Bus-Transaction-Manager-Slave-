@@ -1,0 +1,15 @@
+
+// This file lists all compilation units — order matters.
+
+# package.vc — compile order file
++incdir+../pkg
++incdir+../src
+
+../pkg/bus_pkg.sv
+../pkg/bus_if.sv
+../src/manager.sv
+../src/slave.sv
+../src/interconnect.sv
+../src/monitor.sv
+../src/scoreboard.sv
+../src/top_tb.sv

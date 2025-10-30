@@ -1,0 +1,45 @@
+Let’s now evolve manager–slave Verilog model into a Level-3 version — closer to a real SoC interconnect (like a simplified AXI-Lite).
+
+This one introduces:
+  Multiple slaves
+  Address decoding (simple interconnect)
+  Backpressure (slave not always ready)
+  Independent read/write response timing
+
+⚙️ System Overview :
+
+        +------------------+
+        |     Manager      |
+        |  (Bus Initiator) |
+        +------------------+
+                 |
+                 v
+        +------------------+
+        |  Simple Bus Arb  |  ← address decoder / mux
+        +------------------+
+          |           |
+          v           v
+   +-----------+   +-----------+
+   |  Slave 0  |   |  Slave 1  |
+   |  (Mem A)  |   |  (Mem B)  |
+   +-----------+   +-----------+
+
+1️⃣ Common Interface :  We’ll use the same interface as before, with valid/ready and response.
+
+2️⃣ Manager (Initiator) : The manager will now issue accesses to two different address regions:
+    0x00–0x3F → Slave0
+    0x40–0x7F → Slave1
+
+3️⃣ Simple Slave (Responding to Its Own Address Range) : Each slave stores data in its own internal memory and has random backpressure (delays before ready).
+
+4️⃣ Simple Interconnect (Bus Arbiter / Decoder) : This module connects one manager to two slaves, performing address decoding.
+
+🧠 What’s New Here :
+
+| Concept                   | What It Demonstrates                                                           |
+| ------------------------- | ------------------------------------------------------------------------------ |
+| **Address Decoding**      | Manager sends all requests to interconnect, which routes them to correct slave |
+| **Multiple Slaves**       | Shows how a bus can serve different address spaces                             |
+| **Backpressure**          | Slave randomly delays its ready — tests manager’s wait logic                   |
+| **Response Multiplexing** | Interconnect chooses which slave’s data/resp go back                           |
+| **Extensible Interface**  | The same `bus_if` structure reused for all paths                               |

@@ -1,5 +1,5 @@
 
-Level-4 SystemVerilog upgrade that:
+Level-4 SystemVerilog upgrade that :
 
 Splits read and write channels (separate handshakes)
 Adds transaction IDs (to track outstanding requests)
@@ -7,7 +7,7 @@ Adds monitors + scoreboard (class-based) to automatically check that reads retur
 Keeps the interconnect + multiple slaves from Level-3 with address decode and routing
 Uses interface + virtual interface for clean connectivity
 
-Key design choices / notes
+Key design choices / notes :
 
 Uses SystemVerilog (interfaces, typedef struct, classes, mailbox).
 Manager issues writes/reads with an id (4-bit here). Manager allows multiple outstanding transactions.

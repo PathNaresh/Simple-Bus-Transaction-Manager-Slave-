@@ -1,0 +1,6 @@
+
+Example: Simple Bus Transaction (Manager ↔ Slave)
+
+Let’s model a very simplified bus:
+The manager sends an address, data, and a write enable signal.
+The slave responds with ready and read data.

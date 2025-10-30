@@ -28,3 +28,12 @@ bus_system/
 │   ├── top_tb.sv           # testbench top
 ├── sim/
 │   ├── package.vc          # file inclusion list
+
+🧠 How to Use It - From your simulation environment (for example, using vcs, xrun, or iverilog) :
+
+  vcs -f sim/package.vc -R
+  # or
+  xrun -f sim/package.vc
+  # or
+  iverilog -f sim/package.vc -o simv && vvp simv
+

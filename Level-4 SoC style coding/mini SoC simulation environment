@@ -20,3 +20,132 @@ bus_system/
 ├── sim/
 │   ├── package.vc
 │   ├── Makefile
+
+🧾 1️⃣ sim/package.vc :
+# Verilog Compile File List
+
++incdir+../pkg
++incdir+../src
+
+../pkg/bus_pkg.sv
+../pkg/bus_if.sv
+../src/manager.sv
+../src/slave.sv
+../src/interconnect.sv
+../src/monitor.sv
+../src/scoreboard.sv
+../src/top_tb.sv
+
+🧱 2️⃣ Add Waveform Dump Support in top_tb.sv :
+`timescale 1ns/1ps
+import bus_pkg::*;
+
+module top_tb;
+  logic clk = 0;
+  always #5 clk = ~clk;
+
+  bus_if master_if(clk);
+  bus_if s0_if(clk);
+  bus_if s1_if(clk);
+
+  manager       m0(master_if);
+  slave  #(.BASE_ADDR(8'h00)) s0(s0_if);
+  slave  #(.BASE_ADDR(8'h40)) s1(s1_if);
+  interconnect  ic(master_if, s0_if, s1_if);
+
+  monitor       mon(master_if);
+  scoreboard    sb(master_if);
+
+  // Waveform dump setup
+  initial begin
+    $dumpfile("wave.vcd");
+    $dumpvars(0, top_tb);
+    $display("=== Simulation Started ===");
+  end
+endmodule
+
+This creates wave.vcd in your sim/ directory after running simulation — easily opened in GTKWave.
+
+⚙️ 3️⃣ sim/Makefile :
+# ============================================================
+# Simple Makefile for bus_system simulation
+# Supports: iverilog + vvp + gtkwave
+# ============================================================
+
+TOP      = top_tb
+VCFILE   = package.vc
+OUT      = simv
+WAVE     = wave.vcd
+
+# --- Toolchain (change as needed) ---
+IVERILOG = iverilog
+VVP      = vvp
+GTKWAVE  = gtkwave
+
+# --- Paths ---
+SRC_DIR  = ../src
+PKG_DIR  = ../pkg
+
+# ============================================================
+# Default build + run
+# ============================================================
+
+all: compile run view
+
+compile:
+	@echo ">>> Compiling design ..."
+	$(IVERILOG) -g2012 -f $(VCFILE) -o $(OUT)
+
+run:
+	@echo ">>> Running simulation ..."
+	$(VVP) $(OUT)
+
+view:
+	@echo ">>> Opening waveform ..."
+	$(GTKWAVE) $(WAVE) &
+
+clean:
+	rm -f $(OUT) $(WAVE)
+
+help:
+	@echo "Usage:"
+	@echo "  make compile   # compile design"
+	@echo "  make run       # run simulation"
+	@echo "  make view      # open waveform in GTKWave"
+	@echo "  make clean     # clean files"
+
+🧠 4️⃣ How to Run
+From inside bus_system/sim/:
+make all        # compiles, runs, and opens waveform
+# or stepwise:
+make compile
+make run
+make view
+
+
+🖥️ 5️⃣ What You’ll See in the Waveform / Console
+Console Output (vvp):
+=== Simulation Started ===
+[25] MANAGER: Write 0xAAAABBBB -> Addr 0x10
+[30] MANAGER: Write 0xCCCCDDDD -> Addr 0x50
+[65] MANAGER: Read  0xAAAABBBB from Addr 0x10
+[70] MANAGER: Read  0xCCCCDDDD from Addr 0x50
+
+
+Waveform (gtkwave wave.vcd):
+clk, master_if.valid, ready
+Bus address, data lines
+Response flow from slaves
+Transactions seen by monitor
+
+✅ Why This Setup Is Gold :
+
+| Layer                  | Purpose                        |
+| ---------------------- | ------------------------------ |
+| `pkg/`                 | Central definitions + typedefs |
+| `src/`                 | Each module isolated, reusable |
+| `sim/package.vc`       | Maintains compile order        |
+| `Makefile`             | Automates build/run/view       |
+| `dumpvars`             | Easy waveform debug            |
+| `monitor + scoreboard` | Verification visibility        |
+

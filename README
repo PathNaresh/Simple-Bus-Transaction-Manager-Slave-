@@ -4,3 +4,21 @@ Example: Simple Bus Transaction (Manager ↔ Slave)
 Let’s model a very simplified bus:
 The manager sends an address, data, and a write enable signal.
 The slave responds with ready and read data.
+
+1️⃣ Define a Common Interface : We’ll use a bus_if interface to hold all signals between manager and slave.
+
+2️⃣ Manager (Master) Module : This initiates read/write transactions.
+
+3️⃣ Slave Module : This responds to manager’s requests.
+
+4️⃣ Top-Level Testbench : Connect both modules through the same interface — this shows the manager/slave port connection clearly.
+
+🧠 Key Takeaways :
+
+| Concept                     | Description                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| **Manager Port**            | Drives control and data (`valid`, `wr_en`, `addr`, `wdata`)                  |
+| **Slave Port**              | Responds to manager’s requests (`ready`, `rdata`)                            |
+| **Interface**               | Provides clean connection between both ends                                  |
+| **Verification Equivalent** | In UVM, these correspond to initiator (manager) and responder (slave) agents |
+

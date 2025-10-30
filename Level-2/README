@@ -1,0 +1,11 @@
+
+Let’s now enhance the simple manager–slave example with more realistic behavior — step by step.
+
+⚙️ Goal: Next-Level Bus Transaction Model
+
+We’ll enhance the earlier version with:
+Handshake protocol (valid + ready)
+Read/Write latency (delayed response)
+Burst transactions (multiple data beats per command)
+Response signal (resp) for OK/ERROR
+Clear separation of combinational vs sequential logic

@@ -1,0 +1,22 @@
+
+Below is the Level-4 modular system extended with:
+  Waveform dump support (dumpvars, .vcd)
+  A simple Makefile for running with iverilog + vvp + gtkwave
+  Clean directory separation matching what we planned earlier
+
+🧩 Final Directory Layout :
+
+bus_system/
+├── pkg/
+│   ├── bus_pkg.sv
+│   ├── bus_if.sv
+├── src/
+│   ├── manager.sv
+│   ├── slave.sv
+│   ├── interconnect.sv
+│   ├── monitor.sv
+│   ├── scoreboard.sv
+│   ├── top_tb.sv
+├── sim/
+│   ├── package.vc
+│   ├── Makefile

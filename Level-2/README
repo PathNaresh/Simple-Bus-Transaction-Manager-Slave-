@@ -1,11 +1,11 @@
 
 Let’s now enhance the simple manager–slave example with more realistic behavior — step by step.
+🚀 Now the manager can send bursts, and waits for ready+response.
+🚀 Now the slave: Adds random response delay (latency), Handles burst read/write & Generates response codes
 
-⚙️ Goal: Next-Level Bus Transaction Model
-
-We’ll enhance the earlier version with:
-Handshake protocol (valid + ready)
-Read/Write latency (delayed response)
-Burst transactions (multiple data beats per command)
-Response signal (resp) for OK/ERROR
-Clear separation of combinational vs sequential logic
+⚙️ Goal: Next-Level Bus Transaction Model - We’ll enhance the earlier version with:
+  Handshake protocol (valid + ready)
+  Read/Write latency (delayed response)
+  Burst transactions (multiple data beats per command)
+  Response signal (resp) for OK/ERROR
+  Clear separation of combinational vs sequential logic
